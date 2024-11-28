@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>I-AM</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; padding: 0; }
+    .container { max-width: 600px; margin: auto; }
+    .question { font-size: 1.2em; margin-bottom: 10px; }
+    .options { margin: 10px 0; }
+    .options button { padding: 10px 20px; margin: 5px; cursor: pointer; background-color: #007BFF; color: white; border: none; border-radius: 5px; }
+    .options button:hover { background-color: #0056b3; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>I-AM</h1>
+    <p>Este site foi desenvolvido para facilitar o diagnóstico automotivo, oferecendo orientações rápidas e precisas para ajudar na identificação e resolução de problemas no seu veículo.</p>
+    <div id="question-container">
+      <div class="question" id="question-text"></div>
+      <div class="options" id="options-container"></div>
+    </div>
+  </div>
+
+  <script>
+    // Estrutura das perguntas e respostas com navegação
+    const questions = [
+      { id: 1, question: "Qual o seu relato?", options: ["Superaquecimento", "Barulho incorreto"], next: { "Superaquecimento": 2, "Barulho incorreto": 3 } },
+      { id: 2, question: "Luz de temperatura acesa?", options: ["Sim", "Não"], next: { "Sim": 5, "Não": 6 } },
+      { id: 3, question: "Há folgas nos componentes?", options: ["Sim", "Não"], next: { "Sim": 7, "Não": 8 } },
+      { id: 5, question: "Nível do líquido abaixo do adequado?", options: ["Sim", "Não"], next: { "Sim": 4, "Não": 9 } },
+      { id: 6, question: "Algum vazamento encontrado?", options: ["Sim", "Não"], next: { "Sim": 10, "Não": 11 } },
+      { id: 7, question: "Substitua os componentes desgastados" },
+      { id: 8, question: "Há folgas na direção ou resistência anormal?", options: ["Sim", "Não"], next: { "Sim": 12, "Não": 13 } },
+      { id: 4, question: "Complete corretamente o fluido" },
+      { id: 9, question: "Termostato em boas condições?", options: ["Sim", "Não"], next: { "Sim": 14, "Não": 15 } },
+      { id: 10, question: "Repare o componente" },
+      { id: 11, question: "Verificar termostato" },
+      { id: 12, question: "Ajuste ou substitua componentes da direção" },
+      { id: 13, question: "Certifique-se se o problema foi resolvido e teste novamente" },
+      { id: 14, question: "Substitua o termostato" },
+      { id: 15, question: "Bomba d'água em boas condições?", options: ["Sim", "Não"], next: { "Sim": 16, "Não": 17 } },
+      { id: 16, question: "Ventilador em boas condições?", options: ["Sim", "Não"], next: { "Sim": 18, "Não": 19 } },
+      { id: 18, question: "Teste novamente" },
+      { id: 19, question: "Trocar ventilador" },
+    ];
+
+    let currentQuestionId = 1;  // Começa com a primeira pergunta
+
+    // Função para carregar a pergunta
+    function loadQuestion(id) {
+      const question = questions.find(q => q.id === id);  // Encontra a pergunta com o ID correspondente
+      const questionText = document.getElementById("question-text");
+      const optionsContainer = document.getElementById("options-container");
+
+      questionText.textContent = question.question;  // Exibe o texto da pergunta
+      optionsContainer.innerHTML = "";  // Limpa as opções anteriores
+
+      // Se a pergunta tiver opções, cria os botões para as respostas
+      if (question.options) {
+        question.options.forEach(option => {
+          const button = document.createElement("button");
+          button.textContent = option;
+          button.onclick = () => handleOptionClick(question.next[option]);
+          optionsContainer.appendChild(button);
+        });
+      }
+    }
+
+    // Função para lidar com o clique nas opções
+    function handleOptionClick(nextQuestionId) {
+      if (nextQuestionId) {
+        loadQuestion(nextQuestionId);  // Carrega a próxima pergunta com o ID
+      } else {
+        const questionText = document.getElementById("question-text");
+        const optionsContainer = document.getElementById("options-container");
+        questionText.textContent = "Fim do fluxo. Obrigado!";  // Fim do fluxo de perguntas
+        optionsContainer.innerHTML = "";
+      }
+    }
+
+    // Inicializa com a primeira pergunta
+    loadQuestion(currentQuestionId);
+  </script>
+</body>
+</html>
